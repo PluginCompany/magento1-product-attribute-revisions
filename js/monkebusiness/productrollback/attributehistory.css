@@ -1,0 +1,8 @@
+.middle {
+    min-height: 100vh!important;
+    box-sizing: border-box;
+}
+
+.middle {
+    padding:5px!important;
+}

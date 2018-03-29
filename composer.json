@@ -1,0 +1,15 @@
+{
+    "name": "plugincompany/magento1-product-attribute-revisions",
+    "description": "Product Attribute Revisions for Magento 1 / OpenMage",
+    "type": "magento-module",
+    "license": "MIT",
+    "homepage": "https://plugin.company/magento1-extensions/product-attribute-revisions.html",
+    "support": {
+        "issues": "https://github.com/PluginCompany/magento1-product-attribute-revisions/issues",
+        "source": "https://github.com/PluginCompany/magento1-product-attribute-revisions"
+    },
+    "version": "1.1.4",
+    "require": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

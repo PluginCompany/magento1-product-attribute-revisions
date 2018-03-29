@@ -1,0 +1,16 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Milan
+ * Date: 12/3/13
+ * Time: 9:09 PM
+ */ 
+class Monkebusiness_Rollback_Model_Resource_Change extends Mage_Core_Model_Resource_Db_Abstract
+{
+
+    protected function _construct()
+    {
+        $this->_init('monkebusiness_rollback/change', 'change_id');
+    }
+
+}

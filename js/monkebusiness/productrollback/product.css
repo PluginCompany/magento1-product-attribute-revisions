@@ -1,0 +1,42 @@
+#rollback_grid tr .even {
+    background: #FCFCFC;
+    padding: 2px 3px;
+    margin: -2px -3px;
+}
+#rollback_grid tr .even, #rollback_grid tr .odd{
+    min-height: 18px;
+}
+#rollback_grid tr.even .even {
+    background: #EFEFEF;
+    padding: 2px 3px;
+    margin: -2px -3px;
+}
+
+input[name^="product"] {
+    /*max-width:90%;*/
+}
+
+.attr_revisions {
+    position: absolute;
+    right: 1.8%;
+    top: 5px;
+    border: 1px solid #ccc;
+    padding: 2px;
+    display: block;
+    font-size: 11px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    line-height: 16px;
+    background: #EEF7FA;
+    cursor:pointer;
+    z-index: 10;
+}
+
+.webui-popover-content iframe {
+    max-width: 855px;
+    max-height: 295px;
+}
+
+td.value {
+    position:relative
+}

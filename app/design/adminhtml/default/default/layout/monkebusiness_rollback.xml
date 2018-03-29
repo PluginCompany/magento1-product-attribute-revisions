@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<layout>
+
+    <adminhtml_catalog_product_edit>
+        <reference name="head">
+            <action method="addItem">
+                <type>js_css</type>
+                <name>prototype/windows/themes/default.css</name>
+            </action>
+            <action method="addCss">
+                <name>lib/prototype/windows/themes/magento.css</name>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>monkebusiness/productrollback/product.css</name>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>monkebusiness/productrollback/lib/webui-popover/webui-popover.css</name>
+            </action>
+            <action method="addJs">
+                <name>monkebusiness/jquerynoconflict.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>monkebusiness/productrollback/lib/webui-popover/webui-popover.js</name>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" template="monkebusiness/rollback/product.phtml" />
+        </reference>
+    </adminhtml_catalog_product_edit>
+
+    <adminhtml_product_rollbacks>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="monkebusiness_rollback/adminhtml_getrollbacks"/>
+        </block>
+    </adminhtml_product_rollbacks>
+
+    <adminhtml_product_popup>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>popup.phtml</template>
+            </action>
+        </reference>
+        <reference name="head">
+            <action method="addJs">
+                <name>monkebusiness/productrollback/changespopup.js</name>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>monkebusiness/productrollback/popup.css</name>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="monkebusiness_rollback/adminhtml_getrollbacks_changespopup"/>
+        </reference>
+        <remove name="footer"/>
+    </adminhtml_product_popup>
+
+    <adminhtml_product_popup_grid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="monkebusiness_rollback/adminhtml_getrollbacks_changespopup"/>
+        </block>
+    </adminhtml_product_popup_grid>
+
+    <adminhtml_product_numericoption>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>popup.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="monkebusiness_rollback/adminhtml_numericoption"/>
+        </reference>
+        <remove name="footer"/>
+    </adminhtml_product_numericoption>
+
+    <adminhtml_product_textoption>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>popup.phtml</template>
+            </action>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>js</type>
+                <name>monkebusiness/jquerynoconflict.js</name>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="monkebusiness_rollback/adminhtml_textoption"
+                   template="monkebusiness/rollback/differenceview.phtml"/>
+        </reference>
+        <remove name="footer"/>
+    </adminhtml_product_textoption>
+
+    <adminhtml_product_attributehistory>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>popup.phtml</template>
+            </action>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>js</type>
+                <name>monkebusiness/jquerynoconflict.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>monkebusiness/lib/jquery.floatThead.min.js</name>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>monkebusiness/productrollback/popup.css</name>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>monkebusiness/productrollback/attributehistory.css</name>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="monkebusiness_rollback/adminhtml_attributehistory"/>
+        </reference>
+        <remove name="footer"/>
+    </adminhtml_product_attributehistory>
+
+    <adminhtml_product_attributehistorygrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="monkebusiness_rollback/adminhtml_attributehistory"/>
+        </block>
+    </adminhtml_product_attributehistorygrid>
+</layout>

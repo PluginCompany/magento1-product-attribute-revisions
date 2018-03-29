@@ -1,0 +1,48 @@
+<table id="changedetails">
+    <thead>
+        <tr>
+            <td>Attribute code</td>
+            <td>Original value</td>
+            <td>New value</td>
+        </tr>
+    </thead>
+
+    <?php $i = 0;foreach ($this->getChangedAttributes() as $change) {
+        if ($i % 2 == 0) {
+            $class = 'even';
+        }else {
+            $class = 'odd';
+        }
+        ?>
+        <tr class="<?php echo $class; ?>">
+            <td style="width:220px"><?php echo $change->getAttributeCode(); ?></td>
+            <td style="width:315px"><?php echo $change->getOriginalValue(); ?></td>
+            <td style="width:315px"><?php echo $change->getNewValue(); ?></td>
+            <td style="width:315px"><?php echo $change->getIsRolledBack(); ?></td>
+        </tr>
+
+    <?php $i++; } ?>
+</table>
+
+<style type="text/css">
+    #changedetails {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 880px;
+        background: #fff;
+        font-family: arial, helvetica, sans-serif;
+        font-size: 12px;
+        margin-left:-8px;
+
+    }
+    #changedetails,#changedetails th,#changedetails td {
+        border: 1px solid #dddee0;
+    }
+    #changedetails td {
+        padding: 4px;
+    }
+    #changedetails tr.odd {
+        background: #f6f6f6;
+    }
+    #changedetails thead tr {background:#657e85;font-weight:bold;color:white}
+</style>

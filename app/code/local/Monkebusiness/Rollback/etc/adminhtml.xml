@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2014-2026 Plugin Company
+ *
+ * This file is part of Product Attribute Revisions, released under the MIT License.
+ * See the LICENSE file in the project root.
+ */
+-->
+<config>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <catalog>
+                        <children>
+                            <attributes>
+                                <children>
+                                    <revisions translate="title" module="monkebusiness_rollback">
+                                        <title>Product Attribute Revisions</title>
+                                        <sort_order>1000</sort_order>
+                                    </revisions>
+                                </children>
+                            </attributes>
+                        </children>
+                    </catalog>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

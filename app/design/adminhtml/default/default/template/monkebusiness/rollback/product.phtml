@@ -1,0 +1,19 @@
+<?php
+$product = Mage::registry('current_product');
+$attrChangeCount = Mage::getModel('monkebusiness_rollback/change_product')->getAttributeChangeCount($product->getId())->toArray();
+$items = array();
+foreach($attrChangeCount['items'] as $item){
+    if($item['is_stockitem']){
+        $key = 'inventory_' . $item['attribute_code'];
+    }else{
+        $key =  $item['attribute_code'];
+    }
+   $items[$key] = $item['count'];
+}
+$json = json_encode($items);
+?>
+<script type="text/javascript">
+    pcRollback.attrChangeCount  = <?php echo $json; ?>;
+    pcRollback.attributeHistoryUrl = '<?php echo Mage::helper('adminhtml')->getUrl('adminhtml/product/attributehistory',array('_current'=>true)); ?>';
+    pcRollback.loaderImgUrl = '<?php echo Mage::getBaseUrl('js') . 'monkebusiness/productrollback/img/ajax-loader.gif'; ?>';
+</script>

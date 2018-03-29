@@ -1,0 +1,206 @@
+<?php
+    $url = Mage::getBaseUrl('js') . 'monkebusiness/productrollback/lib/codemirror/';
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel=stylesheet href="<?php echo $url; ?>codemirror.css">
+    <link rel=stylesheet href="<?php echo $url; ?>merge.css">
+    <script src="<?php echo $url; ?>codemirror.js"></script>
+    <script src="<?php echo $url; ?>xml.js"></script>
+    <script src="<?php echo $url; ?>diff_match_patch.js"></script>
+    <script src="<?php echo $url; ?>merge.js"></script>
+    <style type="text/css">
+        .CodeMirror-merge {clear:both;}
+        .mergePaneTitle {float:left;width:50%;text-align:center;}
+        body {font-family: arial, helvetica, sans-serif}
+        .mergeTitleWrapper {width:100%;float:left;clear:both;}
+
+        /* Diff view (no merge)  */
+        <?php if (!$this->enableMerge()) { ?>
+            .CodeMirror-merge-gap {display:none;}
+            .CodeMirror-merge-2pane .CodeMirror-merge-pane {width:50%;}
+        <?php } ?>
+    </style>
+</head>
+<body style="min-height:100vh;margin:0px;box-sizing:border-box;">
+    <?php if(!$this->enableMerge()){ ?>
+        <button style="float:left;clear:both;" type="button" onclick="parent.backToOverview()"><span>Back to overview</span></button>
+    <?php } ?>
+
+    <?php if($this->enableMerge() && !$this->isPopover()){ ?>
+        <h3 style="float:left;">Merge Product Attributes Revisions (<span id="attrname"></span>)</h3>
+            <ul style="float:left;clear:both;width:100%;" class="messages">
+                <li class="notice-msg"><ul><li>
+                        Use the left side panel to merge product attributes revisions. Click the ~ in the center column to restore the original value to the merge results.
+                </li></ul></li></ul>
+    <?php } ?>
+
+    <div class="mergeTitleWrapper">
+        <div class="mergePaneTitle">
+            <?php if(!$this->enableMerge()){ ?>
+                <h3>Original Value</h3>
+            <?php }else{ ?>
+                <h3>Current Value / Merge Result</h3>
+            <?php } ?>
+        </div>
+
+        <div class="mergePaneTitle">
+            <?php if(!$this->enableMerge()){ ?>
+                <h3>Revised Value</h3>
+            <?php }else{ ?>
+                <h3>Original Value</h3>
+            <?php } ?>
+        </div>
+    </div>
+    <div id="view"></div>
+
+    <?php if($this->enableMerge()){ ?>
+        <div class="mergeTitleWrapper">
+            <div class="mergePaneTitle">
+                <button type="button" style="margin:5px;" onclick="applyMergedValue()">
+                    <span>
+                        Restore Merge Result
+                    </span>
+                </button>
+            </div>
+            <div class="mergePaneTitle">
+                <button type="button" style="margin:5px;" onclick="applyOldValue()">
+                    <span>
+                            Restore Original Value
+                    </span>
+                </button>
+            </div>
+        </div>
+    <?php } ?>
+    <script>
+        var value, orig1, dv, panes = 2, highlight = true, connect = null, collapse = false;
+        <?php if($this->enableMerge()){ ?>
+            var textAttributes = <?php echo $this->getTextJSON(); ?>;
+            var textAttrCount = textAttributes.length;
+            var textCurrent = 0;
+            value = textAttributes[0].current_value;
+            orig1 = textAttributes[0].old_value;
+            setAttrName(textAttributes[0].label);
+        <?php }else{ ?>
+                value = <?php echo json_encode($this->getValueOne()); ?>;
+                orig1 = <?php echo json_encode($this->getValueTwo()); ?>;
+        <?php } ?>
+        function initUI() {
+            if (value == null) return;
+            var target = document.getElementById("view");
+            target.innerHTML = "";
+            dv = CodeMirror.MergeView(target, {
+                value: value,
+                orig: orig1,
+                lineNumbers: true,
+                mode: "text/html",
+                highlightDifferences: highlight,
+                connect: connect
+            });
+            parent.codem = dv;
+        }
+
+        function toggleDifferences() {
+            dv.setShowDifferences(highlight = !highlight);
+        }
+
+        window.onload = function() {
+            initUI();
+        }
+
+        function mergeViewHeight(mergeView) {
+            function editorHeight(editor) {
+                if (!editor) return 0;
+                return editor.getScrollInfo().height;
+            }
+            return Math.max(editorHeight(mergeView.leftOriginal()),
+                editorHeight(mergeView.editor()),
+                editorHeight(mergeView.rightOriginal()));
+        }
+
+        function resize(mergeView) {
+            var height = mergeViewHeight(mergeView);
+            for(;;) {
+                if (mergeView.leftOriginal())
+                    mergeView.leftOriginal().setSize(null, height);
+                mergeView.editor().setSize(null, height);
+                if (mergeView.rightOriginal())
+                    mergeView.rightOriginal().setSize(null, height);
+
+                var newHeight = mergeViewHeight(mergeView);
+                if (newHeight >= height) break;
+                else height = newHeight;
+            }
+            mergeView.wrap.style.height = height + "px";
+        }
+
+        function applyOldValue() {
+            textAttributes[textCurrent].value_to_save = orig1;
+            nextAttr();
+        }
+
+        function applyMergedValue(){
+            textAttributes[textCurrent].value_to_save = dv.editor().getValue();
+            nextAttr();
+        }
+
+        function nextAttr() {
+            textCurrent++;
+            if(textCurrent >= textAttrCount){
+                return submitForm();
+            }
+            dv.editor().setValue(textAttributes[textCurrent].current_value);
+            dv.rightOriginal().setValue(textAttributes[textCurrent].old_value);
+            setAttrName(textAttributes[textCurrent].label);
+        }
+
+        function submitForm() {
+            <?php
+            $jsn = $this->getNumericJSON();
+            if(!$jsn){
+                $jsn = 'null';
+            }
+            ?>
+            var numeric = <?php echo $jsn; ?>;
+            var form = jQuery('<form action="<?php echo $this->getFormUrl(); ?>" method="POST">' +
+                '<input type="hidden" id="text" name="text" value="">' +
+                '<input type="hidden" id="numeric_json" name="numeric_json" value="">' +
+                '<?php echo str_replace(array("\n","\r",PHP_EOL),'',$this->getBlockHtml('formkey')); ?>' +
+                '</form>');
+
+            form.find('#text').val(JSON.stringify(textAttributes));
+            form.find('#numeric_json').val(JSON.stringify(<?php echo $jsn; ?>));
+            form.hide().appendTo('body');
+            form.submit();
+        }
+
+        function setAttrName(value) {
+            jQuery('#attrname').text(value);
+        }
+
+    </script>
+   <?php if($this->isPopover()){ ?>
+       <style type="text/css">
+           #view {
+               height: 239px;
+               display: block;
+               clear: both;
+           }
+           .CodeMirror-merge, .CodeMirror-merge .CodeMirror {
+               height:230px;
+           }
+           .middle {
+               min-height:0px;
+               background: #fff;
+               padding:0px;
+           }
+           h2 {
+               font-size:14px;
+               height:18px;
+           }
+       </style>
+
+    <?php } ?>
+</body>
+</html>

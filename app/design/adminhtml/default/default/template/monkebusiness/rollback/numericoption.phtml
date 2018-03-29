@@ -1,0 +1,45 @@
+<?php
+ $values = $this->getNumericOptionArray();
+?>
+<div style="background:white;width:100%;height:100%">
+    <h3>Select Product Attribute Restore Value</h3>
+    <ul style="float:left;clear:both;width:100%;" class="messages">
+        <li class="notice-msg"><ul><li>
+                    Choose to restore the Original Value or the Value Change (Revised Value - Original Value).
+                </li></ul></li></ul>
+    <div class="hor-scroll grid">
+        <form action="<?php echo $this->getSubmitUrl(); ?>" method="post">
+            <table cellspacing="0" class="data">
+              <thead>
+                <tr class="headings">
+                    <th class=" no-link"><span class="nobr">ID</span></th>
+                    <th class=" no-link"><span class="nobr">Attribute</span></th>
+                    <th class=" no-link"><span class="nobr">Current Value</span></th>
+                    <th class=" no-link"><span class="nobr">Original Value</span></th>
+                    <th class=" no-link"><span class="nobr">Revised Value</span></th>
+                    <th class=" no-link"><span class="nobr">Value Change</span></th>
+                    <th class=" no-link"><span class="nobr">Restore Original Value</span></th>
+                    <th class=" no-link"><span class="nobr">Restore Value Change</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($values as $k => $value) { ?>
+                     <tr>
+                         <td><?php echo $k; ?></td>
+                         <td><?php echo $value['attribute_code']; ?></td>
+                         <td><?php echo $value['current_value']; ?></td>
+                         <td><?php echo $value['original_value']; ?></td>
+                         <td><?php echo $value['new_value']; ?></td>
+                         <td><?php echo $value['difference']; ?></td>
+                         <td><input type="radio" name="numeric[<?php echo $k;?>]" value="original" checked="checked"/></td>
+                         <td><input type="radio" name="numeric[<?php echo $k;?>]" value="difference"/></td>
+                     </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+            <?php echo $this->getBlockHtml('formkey') ?>
+            <button type="submit" style="float:right;margin-top:10px;"><span><?php echo $this->getSubmitText(); ?></span></button>
+        </form>
+    </div>
+
+</div>
